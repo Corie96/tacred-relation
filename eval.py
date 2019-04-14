@@ -19,8 +19,7 @@ from utils.vocab import Vocab
 parser = argparse.ArgumentParser()
 parser.add_argument('model_dir', type=str, help='Directory of the model.')
 parser.add_argument('--model', type=str, default='best_model.pt', help='Name of the model file.')
-parser.add_argument('--data_dir', type=str, default='dataset/tacred')
-parser.add_argument('--dataset', type=str, default='test', help="Evaluate on dev or test.")
+parser.add_argument('--eval_dir', type=str)
 parser.add_argument('--out', type=str, default='', help="Save model predictions to this dir.")
 
 parser.add_argument('--seed', type=int, default=1234)
@@ -48,7 +47,7 @@ vocab = Vocab(vocab_file, load=True)
 assert opt['vocab_size'] == vocab.size, "Vocab size must match that in the saved model."
 
 # load data
-data_file = opt['data_dir'] + '/{}.json'.format(args.dataset)
+data_file = args.eval_dir
 print("Loading data from {} with batch size {}...".format(data_file, opt['batch_size']))
 batch = DataLoader(data_file, opt['batch_size'], opt, vocab, evaluation=True)
 

@@ -72,7 +72,9 @@ def main():
 
 def load_tokens(filename):
     with open(filename) as infile:
-        data = json.load(infile)
+        data = []
+        for line in infile:
+            data.append(json.loads(line))
         tokens = []
         for d in data:
             tokens += d['token']

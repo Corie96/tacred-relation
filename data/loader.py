@@ -20,7 +20,9 @@ class DataLoader(object):
         self.eval = evaluation
 
         with open(filename) as infile:
-            data = json.load(infile)
+            data = []
+            for line in infile:
+                data.append(json.loads(line))
         data = self.preprocess(data, vocab, opt)
         # shuffle for training
         if not evaluation:
@@ -51,7 +53,8 @@ class DataLoader(object):
             tokens = map_to_ids(tokens, vocab.word2id)
             pos = map_to_ids(d['stanford_pos'], constant.POS_TO_ID)
             ner = map_to_ids(d['stanford_ner'], constant.NER_TO_ID)
-            deprel = map_to_ids(d['stanford_deprel'], constant.DEPREL_TO_ID)
+            # deprel = map_to_ids(d['stanford_deprel'], constant.DEPREL_TO_ID)
+            deprel = ner
             l = len(tokens)
             subj_positions = get_positions(d['subj_start'], d['subj_end'], l)
             obj_positions = get_positions(d['obj_start'], d['obj_end'], l)
@@ -93,7 +96,8 @@ class DataLoader(object):
         masks = torch.eq(words, 0)
         pos = get_long_tensor(batch[1], batch_size)
         ner = get_long_tensor(batch[2], batch_size)
-        deprel = get_long_tensor(batch[3], batch_size)
+        # deprel = get_long_tensor(batch[3], batch_size)
+        deprel = torch.zeros_like(ner)
         subj_positions = get_long_tensor(batch[4], batch_size)
         obj_positions = get_long_tensor(batch[5], batch_size)
 
